@@ -1,0 +1,64 @@
+name: Java CI with Security Scanning
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  security-scanning:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Snyk CLI
+        run: npm install -g snyk
+
+      - name: Build project
+        run: ./gradlew build -x test
+
+      - name: Snyk auth
+        run: snyk auth --auth-type=token dc458886-f775-4fcf-89b3-69f79144a546
+
+      - name: Run Snyk security test
+        run: snyk test --all-projects --sarif-file-output=snyk-results.sarif
+
+      - name: Upload Snyk results as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: snyk-security-report
+          path: snyk-results.sarif
+
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Run SpotBugs analysis
+        run: ./gradlew spotbugsMain
+
+      - name: Upload SpotBugs reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: spotbugs-reports
+          path: build/reports/spotbugs/

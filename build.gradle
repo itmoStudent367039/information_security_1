@@ -2,15 +2,29 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.6'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'com.github.spotbugs' version '5.0.14'
+	id 'io.snyk.gradle.plugin.snykplugin' version '0.4'
 }
 
 group = 'se.ifmo'
 version = '0.0.1-SNAPSHOT'
 description = 'Safety app with vulnerabilities auto detection'
 
+spotbugs {
+	toolVersion = '4.7.3'
+	ignoreFailures = false
+}
+
+spotbugsMain {
+	reports {
+		html.enabled = true
+		xml.enabled = false
+	}
+}
+
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
+		languageVersion = JavaLanguageVersion.of(17)
 	}
 }
 
@@ -20,10 +34,27 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	implementation 'com.auth0:java-jwt:4.4.0'
+	implementation 'org.liquibase:liquibase-core'
+
+	runtimeOnly 'org.postgresql:postgresql'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+snyk {
+	severity = 'low'
+	api = project.findProperty('snykToken') ?: System.getenv('SNYK_TOKEN')
+	autoDownload = true
+	autoUpdate = true
 }
