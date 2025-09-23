@@ -41,6 +41,8 @@ dependencies {
 
 	implementation 'com.auth0:java-jwt:4.4.0'
 	implementation 'org.liquibase:liquibase-core'
+	implementation 'com.github.spotbugs:spotbugs:4.9.4'
+	implementation 'org.json:json:20231013'
 
 	runtimeOnly 'org.postgresql:postgresql'
 
@@ -54,7 +56,7 @@ tasks.named('test') {
 
 snyk {
 	severity = 'low'
-	api = project.findProperty('snykToken') ?: System.getenv('SNYK_TOKEN')
+	api = '0e1ccbc5-03f7-4603-9b43-5bf09bd859a8'
 	autoDownload = true
 	autoUpdate = true
 }
