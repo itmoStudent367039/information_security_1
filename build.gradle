@@ -11,7 +11,7 @@ version = '0.0.1-SNAPSHOT'
 description = 'Safety app with vulnerabilities auto detection'
 
 spotbugs {
-	toolVersion = '4.7.3'
+	toolVersion = '4.9.4'
 	ignoreFailures = false
 }
 
@@ -40,12 +40,28 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 	implementation 'com.auth0:java-jwt:4.4.0'
-	implementation 'org.liquibase:liquibase-core'
+	implementation 'org.liquibase:liquibase-core:4.27.0'
+	implementation 'org.apache.commons:commons-lang3:3.18.0'
+	implementation 'org.json:json:20231013'
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.15.0-rc1'
 
 	runtimeOnly 'org.postgresql:postgresql'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+configurations.configureEach {
+	resolutionStrategy {
+		force 'org.apache.commons:commons-lang3:3.18.0'
+		force 'org.json:json:20231013'
+		force 'org.apache.bcel:bcel:6.7.0'
+
+		dependencySubstitution {
+			substitute module('org.apache.commons:commons-lang3') using module('org.apache.commons:commons-lang3:3.18.0')
+			substitute module('org.json:json') using module('org.json:json:20231013')
+		}
+	}
 }
 
 tasks.named('test') {
@@ -54,7 +70,6 @@ tasks.named('test') {
 
 snyk {
 	severity = 'low'
-	api = project.findProperty('snykToken') ?: System.getenv('SNYK_TOKEN')
 	autoDownload = true
 	autoUpdate = true
 }

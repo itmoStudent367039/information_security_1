@@ -31,15 +31,15 @@ jobs:
         run: ./gradlew build -x test
 
       - name: Run Snyk security test
-        run: snyk test --all-projects --sarif-file-output=snyk-results.sarif
+        run: snyk test --sarif-file-output=snyk-results.html
         env:
-          SNYK_TOKEN: 0e1ccbc5-03f7-4603-9b43-5bf09bd859a8
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
       - name: Upload Snyk results as artifact
         uses: actions/upload-artifact@v4
         with:
           name: snyk-security-report
-          path: snyk-results.sarif
+          path: snyk-results.html
 
   code-quality:
     runs-on: ubuntu-latest

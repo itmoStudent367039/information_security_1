@@ -11,24 +11,24 @@ services:
     networks:
       - app-network
 
-#  app:
-#    build:
-#      context: ./
-#      dockerfile: Dockerfile
-#    depends_on:
-#      - auth_db
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://auth_db:5432/postgres
-#      SPRING_DATASOURCE_USERNAME: postgres
-#      SPRING_DATASOURCE_PASSWORD: postgres
-#      SECRET_WORD: secret
-#      ISSUER: issuer
-#      SUBJECT: subject
-#      CLAIM_NAME: username
-#    ports:
-#      - "8080:8080"
-#    networks:
-#      - app-network
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    depends_on:
+      - auth_db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://auth_db:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SECRET_WORD: secret
+      ISSUER: issuer
+      SUBJECT: subject
+      CLAIM_NAME: username
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
 
 networks:
   app-network:
