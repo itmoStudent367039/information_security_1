@@ -1,6 +1,11 @@
 pipeline {
   agent any
 
+  tools {
+      // Явно указываем JDK 17 (должен быть настроен в Global Tool Configuration)
+      jdk 'jdk17'
+    }
+
   stages {
     stage('Checkout') {
       steps {
