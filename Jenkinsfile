@@ -3,7 +3,7 @@ pipeline {
 
   tools {
     jdk 'jdk17' // Убедитесь, что в Jenkins настроена JDK с этим именем
-    snyk 'snyk@latest'
+    snyk 'snyk-tool'
   }
 
   stages {
