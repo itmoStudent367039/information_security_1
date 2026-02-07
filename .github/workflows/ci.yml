@@ -30,16 +30,21 @@ jobs:
       - name: Build project
         run: ./gradlew build -x test
 
-      - name: Run Snyk security test
-        run: snyk test --sarif-file-output=snyk-results.html
+      - name: Install snyk-to-html
+        run: npm install -g snyk-to-html
+
+      - name: Run Snyk test and generate HTML report
+        run: |
+          snyk test --json > snyk-results.json
+          snyk-to-html -i snyk-results.json -o snyk-report.html
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      - name: Upload Snyk results as artifact
+      - name: Upload Snyk HTML report
         uses: actions/upload-artifact@v4
         with:
           name: snyk-security-report
-          path: snyk-results.html
+          path: snyk-report.html
 
   code-quality:
     runs-on: ubuntu-latest
